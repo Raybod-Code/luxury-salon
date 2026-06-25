@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+
 from app.database import get_db
-from app.models.service import Service
-from app.schemas.service import ServiceCreate, ServiceResponse
 from app.dependencies.auth import get_current_admin
+from app.models.service import Service
 from app.models.user import User
+from app.schemas.service import ServiceCreate, ServiceResponse
 
 router = APIRouter(prefix="/services", tags=["Services"])
 
@@ -18,11 +19,14 @@ def list_services(db: Session = Depends(get_db)):
 def get_service(service_id: int, db: Session = Depends(get_db)):
     service = db.query(Service).filter(Service.id == service_id).first()
     if not service:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Service not found",
+        )
     return service
 
 
-@router.post("/", response_model=ServiceResponse)
+@router.post("/", response_model=ServiceResponse, status_code=status.HTTP_201_CREATED)
 def create_service(
     payload: ServiceCreate,
     db: Session = Depends(get_db),

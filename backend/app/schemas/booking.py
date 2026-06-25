@@ -1,27 +1,33 @@
 from datetime import datetime
-from decimal import Decimal
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 
-class BookingBase(BaseModel):
+class BookingCreate(BaseModel):
+    branch_id: int
+    service_id: int
+    stylist_id: int
+    booking_date: datetime
+    end_time: datetime
+    total_price: float
+    notes: str | None = None
+
+
+class BookingStatusUpdate(BaseModel):
+    status: str
+
+
+class BookingResponse(BaseModel):
+    id: int
     customer_id: int
     branch_id: int
     service_id: int
     stylist_id: int
     booking_date: datetime
     end_time: datetime
-    total_price: Decimal
-    notes: str | None = None
-
-
-class BookingCreate(BookingBase):
-    pass
-
-
-class BookingResponse(BookingBase):
-    id: int
     status: str
+    total_price: float
+    notes: str | None
     created_at: datetime
     updated_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = {"from_attributes": True}
