@@ -1,6 +1,6 @@
-@import "tailwindcss";
 @import url("https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,600,700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap");
+@import "tailwindcss";
 
 /* ─────────────────────────────────────────
    PANTHEON DESIGN TOKENS — Muted Burgundy
@@ -48,7 +48,7 @@
   --color-text-faint:    #B3A89E;
   --color-text-inverse:  #F6F1E8;
 
-  /* Primary — Soft Burgundy (کاملاً مات) */
+  /* Primary — Soft Burgundy */
   --color-primary:       #6F2232;
   --color-primary-deep:  #5A1E2A;
   --color-primary-soft:  #8A4D57;
@@ -79,11 +79,11 @@
   --shadow-xl:  0 32px 80px rgba(44, 37, 34, 0.16);
 
   /* Transitions */
-  --ease-luxury:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-luxury:    cubic-bezier(0.16, 1, 0.3, 1);
   --ease-cinematic: cubic-bezier(0.77, 0, 0.175, 1);
-  --duration-fast: 180ms;
-  --duration-mid:  420ms;
-  --duration-slow: 800ms;
+  --duration-fast:  180ms;
+  --duration-mid:   420ms;
+  --duration-slow:  800ms;
 
   /* Layout */
   --content-narrow:  640px;
@@ -103,7 +103,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  scroll-behavior: auto; /* Lenis handles this */
+  scroll-behavior: smooth;
   hanging-punctuation: first last;
 }
 
@@ -115,7 +115,6 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   overflow-x: hidden;
-  cursor: none; /* Custom cursor */
 }
 
 img, picture, video, canvas, svg {
@@ -138,7 +137,7 @@ input, button, textarea, select {
   color: inherit;
 }
 
-button { cursor: none; background: none; border: none; }
+button { cursor: pointer; background: none; border: none; }
 
 ::selection {
   background: rgba(111, 34, 50, 0.15);
@@ -167,6 +166,95 @@ button { cursor: none; background: none; border: none; }
 .font-display { font-family: var(--font-display); }
 .font-body    { font-family: var(--font-body); }
 
+/* ─── PRIMARY BUTTON ────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-full);
+  transition:
+    background 300ms var(--ease-luxury),
+    box-shadow 300ms var(--ease-luxury);
+}
+.btn-primary:hover {
+  background: var(--color-primary-deep);
+  box-shadow: 0 6px 20px rgba(111, 34, 50, 0.3);
+}
+.btn-primary:active { transform: scale(0.97); }
+
+/* ─── LUXURY BUTTON ─────────────────── */
+.btn-luxury {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-8);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-inverse);
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: 0;
+  transition:
+    background var(--duration-mid) var(--ease-luxury),
+    color var(--duration-mid) var(--ease-luxury);
+  position: relative;
+  overflow: hidden;
+}
+.btn-luxury::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-primary-deep);
+  transform: translateY(100%);
+  transition: transform var(--duration-mid) var(--ease-luxury);
+}
+.btn-luxury:hover::after { transform: translateY(0); }
+.btn-luxury span { position: relative; z-index: 1; }
+
+/* ─── GHOST BUTTON ───────────────────── */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-8);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  background: transparent;
+  border: 1px solid var(--color-primary);
+  border-radius: 0;
+  transition:
+    background var(--duration-mid) var(--ease-luxury),
+    color var(--duration-mid) var(--ease-luxury);
+  position: relative;
+  overflow: hidden;
+}
+.btn-ghost::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-primary);
+  transform: translateY(100%);
+  transition: transform var(--duration-mid) var(--ease-luxury);
+}
+.btn-ghost:hover { color: var(--color-text-inverse); }
+.btn-ghost:hover::after { transform: translateY(0); }
+.btn-ghost span { position: relative; z-index: 1; }
+
 /* ─── GRAIN OVERLAY ─────────────────── */
 .grain-overlay {
   position: fixed;
@@ -191,75 +279,6 @@ button { cursor: none; background: none; border: none; }
   padding-block: clamp(var(--space-16), 8vw, var(--space-32));
 }
 
-/* ─── LUXURY BUTTON ─────────────────── */
-.btn-luxury {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-4) var(--space-8);
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-text-inverse);
-  background: var(--color-primary);
-  border: 1px solid var(--color-primary);
-  border-radius: 0;
-  transition:
-    background var(--duration-mid) var(--ease-luxury),
-    color var(--duration-mid) var(--ease-luxury),
-    border-color var(--duration-mid) var(--ease-luxury);
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-luxury::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--color-primary-deep);
-  transform: translateY(100%);
-  transition: transform var(--duration-mid) var(--ease-luxury);
-}
-
-.btn-luxury:hover::after { transform: translateY(0); }
-.btn-luxury span { position: relative; z-index: 1; }
-
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-4) var(--space-8);
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-primary);
-  background: transparent;
-  border: 1px solid var(--color-primary);
-  border-radius: 0;
-  transition:
-    background var(--duration-mid) var(--ease-luxury),
-    color var(--duration-mid) var(--ease-luxury);
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-ghost::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--color-primary);
-  transform: translateY(100%);
-  transition: transform var(--duration-mid) var(--ease-luxury);
-}
-
-.btn-ghost:hover { color: var(--color-text-inverse); }
-.btn-ghost:hover::after { transform: translateY(0); }
-.btn-ghost span { position: relative; z-index: 1; }
-
 /* ─── SCROLL BAR ────────────────────── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--color-bg); }
@@ -274,12 +293,14 @@ button { cursor: none; background: none; border: none; }
   0%   { background-position: -200% center; }
   100% { background-position:  200% center; }
 }
-
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
+@keyframes fadeDown {
+  0%, 100% { opacity: 0; transform: translateY(-4px); }
+  50%       { opacity: 1; transform: translateY(4px); }
+}
 @keyframes scaleIn {
   from { opacity: 0; transform: scale(0.96); }
   to   { opacity: 1; transform: scale(1); }

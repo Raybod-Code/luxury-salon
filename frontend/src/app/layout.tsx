@@ -1,18 +1,16 @@
-import type { Metadata } from "next";
-import type { ReactNode } from "react";
-import "./globals.css";
-import { CustomCursor } from "@/src/components/ui/CustomCursor";
-import { LenisProvider } from "@/lib/lenis";
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "PANTHEON — Luxury Beauty Maison",
+  title: 'PANTHEON — Luxury Beauty Maison',
   description:
-    "A curated beauty experience. Precision, artistry, and intimacy — by appointment.",
-  keywords: ["luxury salon", "beauty maison", "hair", "makeup", "skincare"],
+    'A curated beauty experience. Precision, artistry, and intimacy — by appointment.',
+  keywords: ['luxury salon', 'beauty maison', 'hair', 'makeup', 'skincare'],
   openGraph: {
-    title: "PANTHEON — Luxury Beauty Maison",
-    description: "Beauty, composed with precision.",
-    type: "website",
+    title: 'PANTHEON — Luxury Beauty Maison',
+    description: 'Beauty, composed with precision.',
+    type: 'website',
   },
 };
 
@@ -29,14 +27,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
       </head>
       <body>
-        {/* Grain overlay — فقط 3.5% opacity */}
+        {/* Grain overlay */}
         <div className="grain-overlay" aria-hidden="true" />
-
-        {/* Custom cursor — فقط desktop */}
-        <CustomCursor />
-
-        {/* Smooth scroll wrapper */}
-        <LenisProvider>{children}</LenisProvider>
+        {children}
       </body>
     </html>
   );
