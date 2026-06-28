@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import "./globals.css";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { LenisProvider } from "@/lib/lenis";
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <html lang="fa" dir="ltr">
