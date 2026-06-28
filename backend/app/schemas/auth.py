@@ -1,19 +1,28 @@
 from pydantic import BaseModel
+from typing import Optional
+from app.schemas.user import UserResponse
+
+
+class LoginRequest(BaseModel):
+    phone: str
+    password: str
 
 
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+    user: UserResponse
 
 
-class LoginRequest(BaseModel):
-    email: str
-    password: str
+class RefreshRequest(BaseModel):
+    refresh_token: str
 
 
-class TokenPayload(BaseModel):
-    sub: str
-    user_id: int
-    type: str
-    exp: int
+class OTPRequest(BaseModel):
+    phone: str
+
+
+class OTPVerify(BaseModel):
+    phone: str
+    otp_code: str

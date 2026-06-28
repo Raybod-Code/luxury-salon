@@ -1,29 +1,57 @@
+import enum
 from datetime import datetime
-from decimal import Decimal
-from sqlalchemy import Boolean, DateTime, Integer, Numeric, String, Text
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import (
+    Column, Integer, String, Boolean, DateTime,
+    Enum as SAEnum, Text, Float, ForeignKey
+)
+from sqlalchemy.orm import relationship
 from app.database import Base
+
+
+class ServiceCategory(str, enum.Enum):
+    HAIR = "hair"
+    SKIN = "skin"
+    NAIL = "nail"
+    MAKEUP = "makeup"
+    BROW = "brow"
+    LASH = "lash"
+    BRIDAL = "bridal"
+    MASSAGE = "massage"
+    PACKAGE = "package"
 
 
 class Service(Base):
     __tablename__ = "services"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    name: Mapped[str] = mapped_column(String(150), nullable=False, index=True)
-    slug: Mapped[str] = mapped_column(String(160), unique=True, nullable=False, index=True)
-    category: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
-    short_description: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(150), nullable=False)
+    slug = Column(String(150), unique=True, index=True, nullable=False)
+    description = Column(Text, nullable=True)
+    short_description = Column(String(300), nullable=True)
+    category = Column(SAEnum(ServiceCategory), nullable=False)
+    image_url = Column(String(500), nullable=True)
 
-    duration_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
-    price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
+    # قیمت و زمان
+    price = Column(Integer, nullable=False)               # تومان
+    price_max = Column(Integer, nullable=True)            # برای رنج قیمتی
+    duration_minutes = Column(Integer, nullable=False, default=60)
 
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    is_signature: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    # نمایش
+    is_active = Column(Boolean, default=True)
+    is_featured = Column(Boolean, default=False)
+    is_signature = Column(Boolean, default=False)
+    sort_order = Column(Integer, default=0)
 
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
-    )
+    # سرویس مکمل (add-on)
+    is_addon = Column(Boolean, default=False)
+    parent_service_id = Column(Integer, ForeignKey("services.id"), nullable=True)
+    addons = relationship("Service", foreign_keys=[parent_service_id])
 
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
     bookings = relationship("Booking", back_populates="service")
+
+    def __repr__(self):
+        return f"<Service {self.name} | {self.category}>"

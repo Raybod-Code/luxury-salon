@@ -1,33 +1,68 @@
+from pydantic import BaseModel, field_validator
+from typing import Optional, List
 from datetime import datetime
-from pydantic import BaseModel
+from app.models.booking import BookingStatus, PaymentStatus
 
 
 class BookingCreate(BaseModel):
     branch_id: int
     service_id: int
     stylist_id: int
-    booking_date: datetime
-    end_time: datetime
-    total_price: float
-    notes: str | None = None
+    scheduled_at: datetime
+    addon_service_ids: Optional[List[int]] = []
+    client_notes: Optional[str] = None
+    coupon_code: Optional[str] = None
+
+    @field_validator("scheduled_at")
+    @classmethod
+    def validate_future_date(cls, v: datetime) -> datetime:
+        if v <= datetime.utcnow():
+            raise ValueError("زمان رزرو باید در آینده باشد")
+        return v
 
 
-class BookingStatusUpdate(BaseModel):
-    status: str
+class BookingUpdate(BaseModel):
+    scheduled_at: Optional[datetime] = None
+    client_notes: Optional[str] = None
+    status: Optional[BookingStatus] = None
+    staff_notes: Optional[str] = None
+
+
+class BookingCancelRequest(BaseModel):
+    reason: Optional[str] = None
 
 
 class BookingResponse(BaseModel):
     id: int
-    customer_id: int
-    branch_id: int
-    service_id: int
+    booking_ref: str
+    client_id: int
     stylist_id: int
-    booking_date: datetime
-    end_time: datetime
-    status: str
-    total_price: float
-    notes: str | None
+    service_id: int
+    branch_id: int
+    addon_service_ids: Optional[List[int]]
+    scheduled_at: datetime
+    duration_minutes: int
+    ends_at: datetime
+    total_price: int
+    deposit_amount: int
+    discount_amount: int
+    final_price: int
+    coupon_code: Optional[str]
+    status: BookingStatus
+    payment_status: PaymentStatus
+    payment_ref: Optional[str]
+    client_notes: Optional[str]
     created_at: datetime
-    updated_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class AvailableSlot(BaseModel):
+    time: str          # "14:30"
+    available: bool
+
+
+class AvailabilityResponse(BaseModel):
+    date: str          # "2026-07-01"
+    stylist_id: int
+    slots: List[AvailableSlot]
